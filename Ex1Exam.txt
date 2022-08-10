@@ -1,0 +1,121 @@
+#K-Means
+
+length(dataA1$Algebra)
+length(dataA1$Calculus)
+plot(dataA1)
+
+
+Kc=kmeans(dataA1,5)
+points(kc$centers[c('X1','X2')],col=1:5,pch=8)
+length(dataA1$Algebra)
+length(dataA1$Calculus)
+plot(dataA1)
+
+(#1
+kc=kmeans(dataA1,5)
+p1=plot(dataA1,col=kc$cluster)
+fviz_cluster(kc,dataA1,main = 'kmeans,k=5')
+
+#2
+kc2=kmeans(dataA1,6)
+p2=plot(dataA1,col=kc2$cluster)
+fviz_cluster(kc2,dataA1,main = 'kmeans,k=6')
+kc2
+#4
+kmeans(dataA1,4)
+plot(dataA1,col=kmeans(dataA1,4))
+fviz_cluster(kmeans(dataA1,4),dataA1,main = 'kmeans,k=4')
+
+fviz_cluster(kmeans(dataA1,2),dataA1,main = 'kmeans,k=2')
+
+)
+
+
+#3<---
+kc3=kmeans(dataA1,3)
+p3=plot(dataA1,col=kc3$cluster)
+fviz_cluster(kc3,dataA1,main = 'kmeans,k=3')
+kc3
+
+
+#NbClust
+
+set.seed(17238)
+nc=NbClust(dataA1,min.nc = 2,max.nc = 15,method = "kmeans")
+barplot(table(nc$Best.n[1,]),
+        xlab="Number of Clusters",ylab="Number of Criteria",
+        main="Number of Clusters Chosen by 26 Criteria")
+table(nc$Best.n[1,])
+
+##wssplot
+
+wssplot= function(dataA1,nc=20,seed=17238){
+  wss=(nrow(dataA1))*sum(apply(dataA1,2,var))
+  for (i in 2:nc) {
+    set.seed(seed)
+    wss[i]=sum(kmeans(dataA1,centers = i)$withinss)
+  }
+  plot(1:nc,wss,type="b",xlab="Number of Clusters",
+       ylab="Within groups sum of squares")
+}
+
+wssplot(dataA1,nc=15)
+
+#cont
+
+table(dataA1$Y,kc3$cluster)
+barplot(table(nc$Best.n[1,]),
+        xlab="Number of Clusters",ylab="Number of Criteria",
+        main="Number of Clusters Chosen by 26 Criteria")
+
+
+
+###########hierarcy
+#hierarcy
+
+#simple
+hc2=hclust(dist(dataA1),method = "single")
+plot(hc2)
+rect.hclust(hc2,2)
+groupsS=cutree(hc2,k=2)
+table(groupsS)
+
+
+#ward
+hc=hclust(dist(dataA1),method = "ward.D2")
+plot(hc)
+rect.hclust(hc,3)
+groupsW=cutree(hc,k=3)
+table(groupsW)
+
+#complete
+hc3=hclust(dist(dataA1),method = "complete")
+plot(hc3)
+rect.hclust(hc3,3)
+groupsC=cutree(hc3,k=3)
+table(groupsC)
+
+#ψεντροιδ
+
+hc4=hclust(dist(dataA1),method = "centroid")
+plot(hc4)
+rect.hclust(hc4,2)
+groupsCen=cutree(hc4,k=2)
+table(groupsCen)
+
+#ARI 
+randIndex(groupsW,groupsC)
+randIndex(groupsC,groupsS)
+randIndex(groupsW,groupsS)
+
+
+
+nn=NbClust(data=dataA1,diss = NULL,distance = "euclidean",min.nc =2,max.nc = 15,method = "ward.D2",index = "all",alphaBeale = 0.1)
+set.seed(17238)
+nn=NbClust(data=dataA1,diss = NULL,distance = "euclidean",min.nc =2,max.nc = 15,method = "single",index = "all",alphaBeale = 0.1)
+
+nn=NbClust(data=dataA1,diss = NULL,distance = "euclidean",min.nc =2,max.nc = 15,method = "complete",index = "all",alphaBeale = 0.1)
+
+nn=NbClust(data=dataA1,diss = NULL,distance = "euclidean",min.nc =2,max.nc = 15,method = "centroid",index = "all",alphaBeale = 0.1)
+
+nn=NbClust(data=dataA1,diss = NULL,distance = "euclidean",min.nc =2,max.nc = 15,method = "average",index = "all",alphaBeale = 0.1)
