@@ -1,0 +1,10 @@
+# Data-clustering-exercise
+Review analysis results, while suggesting which clustering method works best with the given data.
+Libraries used for this exercise:
+-cluster
+-ggplot2
+-dpryr
+-mclust
+-factoextra
+-dbscan
+-NbClust
